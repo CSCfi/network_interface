@@ -50,3 +50,7 @@ DEFROUTE={{ item.defroute }}
 {% if item.mtu is defined %}
 MTU={{ item.mtu }}
 {% endif %}
+
+{% if item.bridge is defined %}
+BRIDGE={{ item.bridge }}
+{% endif %}
