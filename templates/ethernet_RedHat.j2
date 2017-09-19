@@ -1,4 +1,4 @@
-{% if item.bootproto == 'static' %}
+{% if item.bootproto == 'static' or item.bootproto == 'none' %}
 DEVICE={{ item.device }}
 BOOTPROTO=none
 {% if item.address is defined -%}
@@ -15,6 +15,9 @@ GATEWAY={{ item.gateway }}
 {% endif %}
 {%- if item.vlan is defined -%}
 VLAN=yes
+{% endif %}
+{%- if item.bridge is defined -%}
+BRIDGE={{ item.bridge }}
 {% endif %}
 {% endif %}
 
