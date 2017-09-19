@@ -35,7 +35,7 @@
    - restart network
 
 - name: Write configuration files for rhel route configuration
-  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }} 
+  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
   with_items: "{{ network_ether_interfaces }}"
   when: network_ether_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
 
@@ -52,7 +52,7 @@
   when: bond_result|changed
 
 - name: Write configuration files for route configuration
-  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }} 
+  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
   with_items: "{{ network_bond_interfaces }}"
   when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
@@ -77,7 +77,7 @@
    - restart network
 
 - name: Write configuration files for rhel route configuration with vlan
-  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }} 
+  template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
   with_items: "{{ network_vlan_interfaces }}"
   when: network_vlan_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
