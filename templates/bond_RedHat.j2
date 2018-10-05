@@ -2,16 +2,16 @@
 DEVICE={{ item.device }}
 USERCTL=no
 BOOTPROTO=none
-{% if item.address is defined %}
+{% if item.address is defined -%}
 IPADDR={{ item.address }}
 {% endif %}
-{% if item.onboot is defined %}
+{% if item.onboot is defined -%}
 ONBOOT={{ item.onboot|default("yes") }}
 {% endif %}
-{% if item.netmask is defined %}
+{% if item.netmask is defined -%}
 NETMASK={{ item.netmask }}
 {% endif %}
-{% if item.gateway is defined %}
+{% if item.gateway is defined -%}
 GATEWAY={{ item.gateway }}
 {% endif %}
 BONDING_OPTS="mode={{ item.bond_mode }} miimon={{ item.bond_miimon|default(100) }} {{ item.bond_extra_opts|default('') }} "
@@ -25,22 +25,22 @@ ONBOOT={{ item.onboot|default("yes") }}
 BOOTPROTO=dhcp
 {% endif %}
 
-{% if item.nm_controlled is defined %}
+{% if item.nm_controlled is defined -%}
 NM_CONTROLLED={{ item.nm_controlled }}
 {% endif %}
 
-{% if item.defroute is defined %}
+{% if item.defroute is defined -%}
 DEFROUTE={{ item.defroute }}
 {% endif %}
 
-{% if item.mtu is defined %}
+{% if item.mtu is defined -%}
 MTU={{ item.mtu }}
 {% endif %}
 
-{% if item.bonding_master is defined %}
+{% if item.bonding_master is defined -%}
 BONDING_MASTER={{ item.bonding_master }}
 {% endif %}
 
-{% if item.bridge is defined %}
+{% if item.bridge is defined -%}
 BRIDGE={{ item.bridge }}
 {% endif %}
