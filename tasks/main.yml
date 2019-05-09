@@ -10,8 +10,10 @@
   include_vars: "{{ ansible_os_family }}.yml"
 
 - name: Install the required  packages in Redhat derivatives
-  yum: name={{ item }} state=installed
-  with_items: "{{ network_pkgs }}"
+  yum:
+    name: "{{ network_pkgs }}"
+  vars:
+     packages:  "{{ network_pkgs }}"
   when: ansible_os_family == 'RedHat' and network_check_packages
 
 - name: Install the required packages in Debian derivatives
@@ -74,6 +76,7 @@
   with_subelements:
    - "{{network_bond_interfaces}}"
    - bond_slaves
+
   when: network_bond_interfaces is defined
   register: bond_port_result
   notify:
