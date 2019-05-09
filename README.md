@@ -130,7 +130,7 @@ address obtained via DHCP.
               bond_slaves: [eth1, eth2]
 ```
 
-5) Configure a VLAN interface with the vlan tag 2 for an ethernet interface 
+5) Configure a VLAN interface with the vlan tag 2 for an ethernet interface
 and set nozeroconf to True (no 169.254.0.0/16 link local address).
 
 ```
@@ -150,8 +150,34 @@ and set nozeroconf to True (no 169.254.0.0/16 link local address).
 	            address: 192.168.20.18
 	            netmask: 255.255.255.0
 ```
+6) Configure Bond interface over vlan tagged 10001 interfaces with extra route.
+important part is define that slaves for the bond are vlan slaves
+and bond carrier detection is not using physical interface link status. This feature is extremely usable whenever one needs better utilization of physical interfaces. two physical interfaces can support 2 or more different bonded interfaces  that have different tagged vlans. This means that for example public and private networks ( 2 different tagged vlans) can be separated  to different physical interfaces for communication and in failure state, fail over to available interface. 
 
-6) All the above examples show how to configure a single host, The below
+```
+- hosts: myhost
+  roles:
+    - role: network
+      network_extra_bonding_module_options: "use_carrier=0"
+      network_bond_interfaces:
+        - device: bond-ext
+          address: 192.168.10.128
+          netmask: 255.255.255.0
+          bootproto: static
+          bond_mode: active-backup
+          onboot: "yes"
+          nm_controlled: "no"
+          mtu: 9000
+          bond_miimon: 500
+          bond_slaves: [eth1.10001, eth2.10001]
+          route:
+            - network: 192.168.222.0
+              netmask: 255.255.255.0
+              gateway: 192.168.10.1
+
+```
+
+7) All the above examples show how to configure a single host, The below
 example shows how to define your network configurations for all your machines.
 
 Assume your host inventory is as follows:
@@ -206,6 +232,7 @@ may need to have a control interface that you do *not* modify using this
 method so that Ansible has a stable connection to configure the target
 systems.
 
+
 Dependencies
 ------------
 
@@ -220,4 +247,3 @@ Author Information
 ------------------
 
 Benno Joy
-

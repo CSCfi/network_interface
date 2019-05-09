@@ -5,6 +5,10 @@ ONBOOT=yes
 SLAVE=yes
 USERCTL=no
 
+{% if item.0.bond_slave_vlan is defined %}
+VLAN=yes
+{% endif %}
+
 {% if item.nm_controlled is defined %}
 NM_CONTROLLED={{ item.nm_controlled }}
 {% endif %}
