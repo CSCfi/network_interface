@@ -49,6 +49,16 @@
   template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
   with_items: "{{ network_ether_interfaces }}"
   when: network_ether_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
+  notify:
+   - restart network
+
+- name: Add ether routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
+  command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
+  with_items: "{{ network_ether_interfaces }}"
+  when: network_ether_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat' and network_ip_route_ephemeral and item.route|length < 2
+  register: reg_network_iproute
+  failed_when: reg_network_iproute.rc|int != 0 and reg_network_iproute.rc|int != 2
+  changed_when: reg_network_iproute.rc|int == 0
 
 - name: Create the network configuration file for bond devices
   template: src=bond_{{ ansible_os_family }}.j2 dest={{ net_path }}/ifcfg-{{ item.device }}
@@ -72,6 +82,14 @@
   when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+
+- name: Add bond routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
+  command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
+  with_items: "{{ network_bond_interfaces }}"
+  when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat' and network_ip_route_ephemeral and item.route|length < 2
+  register: reg_network_iproute
+  failed_when: reg_network_iproute.rc|int != 0 and reg_network_iproute.rc|int != 2
+  changed_when: reg_network_iproute.rc|int == 0
 
 - name: Create the network configuration file for slave in the bond devices
   template: src=bond_slave_{{ ansible_os_family }}.j2 dest={{ net_path }}/ifcfg-{{ item.1 }}
@@ -99,6 +117,14 @@
   notify:
    - restart network
 
+- name: Add vlan routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
+  command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
+  with_items: "{{ network_vlan_interfaces }}"
+  when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat' and network_ip_route_ephemeral and item.route|length < 2
+  register: reg_network_iproute
+  failed_when: reg_network_iproute.rc|int != 0 and reg_network_iproute.rc|int != 2
+  changed_when: reg_network_iproute.rc|int == 0
+
 - name: Create the network configuration file for bridge devices
   template: src=bridge_{{ ansible_os_family }}.j2 dest={{ net_path }}/ifcfg-{{ item.device }}
   with_items: "{{ network_bridge_interfaces }}"
@@ -113,3 +139,11 @@
   when: network_bridge_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+
+- name: Add bridge routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
+  command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
+  with_items: "{{ network_bridge_interfaces }}"
+  when: network_bridge_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat' and network_ip_route_ephemeral and item.route|length < 2
+  register: reg_network_iproute
+  failed_when: reg_network_iproute.rc|int != 0 and reg_network_iproute.rc|int != 2
+  changed_when: reg_network_iproute.rc|int == 0
