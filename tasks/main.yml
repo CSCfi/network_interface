@@ -143,6 +143,8 @@
 
 - name: Add bridges manually if network_bridge_ephemeral is True
   command: "brctl addbr {{ item.device }}"
+  args:
+    creates: "/sys/class/net/{{ item.device }}"
   with_items: "{{ network_bridge_interfaces }}"
   when: network_bridge_interfaces is defined and ansible_os_family == 'RedHat' and network_bridge_ephemeral
   register: reg_network_bridge
