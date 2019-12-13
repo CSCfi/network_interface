@@ -113,7 +113,7 @@
 - name: Add vlan interfaces manually if network_vlan_ephemeral is True
   command: "ip link add link {{ item.device.split('.')[0] }} name {{ item.device }} type vlan id {{ item.device.split('.')[1] }}"
   args:
-    creates: "/sys/class/net/{{ item.device }}"
+    creates: "/sys/devices/virtual/net/{{ item.device }}"
   with_items: "{{ network_vlan_interfaces }}"
   when: network_vlan_interfaces is defined and ansible_os_family == 'RedHat' and network_vlan_ephemeral
   register: reg_network_vlan
@@ -146,7 +146,7 @@
 - name: Add bridges manually if network_bridge_ephemeral is True
   command: "brctl addbr {{ item.device }}"
   args:
-    creates: "/sys/class/net/{{ item.device }}"
+    creates: "/sys/devices/virtual/net/{{ item.device }}"
   with_items: "{{ network_bridge_interfaces }}"
   when: network_bridge_interfaces is defined and ansible_os_family == 'RedHat' and network_bridge_ephemeral
   register: reg_network_bridge
@@ -155,6 +155,8 @@
 
 - name: Plug VLAN interfaces to bridges manually if network_bridge_ephemeral and network_vlan_ephemeral are True
   command: "brctl addif {{ item.bridge }} {{ item.device }}"
+  args:
+    creates: "/sys/devices/virtual/net/{{ item.bridge }}/lower_{{ item.device }}"
   with_items: "{{ network_vlan_interfaces }}"
   when: network_bridge_interfaces is defined and ansible_os_family == 'RedHat' and network_bridge_ephemeral and network_vlan_ephemeral
   register: reg_network_bridge_vlan
