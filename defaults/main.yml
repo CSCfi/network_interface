@@ -9,3 +9,6 @@ network_allow_service_restart: true
 bond_modules_path: "/etc/modprobe.d"
 network_extra_bonding_module_options: ""
 network_ip_route_ephemeral: false
+network_bridge_ephemeral: false
+network_vlan_ephemeral: false
+
