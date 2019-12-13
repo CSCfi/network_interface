@@ -111,7 +111,7 @@
    - restart network
 
 - name: Add vlan interfaces manually if network_vlan_ephemeral is True
-  command: "ip link add link {{ item.device.split(".")[0] }} name {{ item.device }} type vlan id {{ item.device.split(".")[1] }}"
+  command: "ip link add link {{ item.device.split('.')[0] }} name {{ item.device }} type vlan id {{ item.device.split('.')[1] }}"
   with_items: "{{ network_vlan_interfaces }}"
   when: network_vlan_interfaces is defined and ansible_os_family == 'RedHat' and network_vlan_ephemeral
   register: reg_network_vlan
