@@ -120,6 +120,14 @@
   failed_when: reg_network_vlan.rc|int != 0 and reg_network_vlan.rc|int != 2
   changed_when: reg_network_vlan.rc|int == 0
 
+- name: Set MTU manually on vlan interfaces if network_vlan_ephemeral is True and the interface parameters include mtu
+  command: "ip link set mtu {{ item.mtu }} {{ item.device }}"
+  with_items: "{{ network_vlan_interfaces }}"
+  when: network_vlan_interfaces is defined and ansible_os_family == 'RedHat' and network_vlan_ephemeral and item.mtu is defined
+  register: reg_network_vlan
+  failed_when: reg_network_vlan.rc|int != 0 and reg_network_vlan.rc|int != 2
+  changed_when: reg_network_vlan.rc|int == 0
+
 - name: Write configuration files for rhel route configuration with vlan
   template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
   with_items: "{{ network_vlan_interfaces }}"
