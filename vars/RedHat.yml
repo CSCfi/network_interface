@@ -1,6 +1,6 @@
 ---
 network_pkgs:
-  - libselinux-python
+  - python3-libselinux
   - bridge-utils
   - iputils
 
