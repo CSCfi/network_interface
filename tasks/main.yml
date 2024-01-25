@@ -11,17 +11,17 @@
 
 - name: Check if we are in CentOS 8
   set_fact:
-    os_centos8: ansible_facts['distribution'] == 'CentOS' and ansible_facts['distribution_major_version'] == '8'
+    os_centos8: "{{ ansible_facts['distribution'] == 'CentOS' and ansible_facts['distribution_major_version'] == '8' }}"
 
 - name: Install prerequisites for CentOS 8
   yum:
-    name: epel-release network-scripts
+    name: epel-release,network-scripts
     state: latest
   when: os_centos8
 
 - name: Adjust vars in case of CentOS 8
   set_fact:
-    network_pkgs: network_pkgs_centos8
+    network_pkgs: "{{ network_pkgs_centos8 }}"
   when: os_centos8
 
 - name: Install the required  packages in Redhat derivatives
