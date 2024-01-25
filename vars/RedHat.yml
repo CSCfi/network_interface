@@ -1,5 +1,10 @@
 ---
 network_pkgs:
+  - libselinux-python
+  - bridge-utils
+  - iputils
+
+network_pkgs_centos8:
   - python3-libselinux
   - bridge-utils
   - iputils
