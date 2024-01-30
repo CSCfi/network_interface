@@ -38,16 +38,6 @@
      packages:  "{{ network_pkgs }}"
   environment: env
   when: ansible_os_family == 'Debian'
-  
-- name: Prevent NetworkManager from managing resolv.conf
-  copy:
-    dest: "/etc/NetworkManager/conf.d/90-dns-none.conf"
-    content: |
-      [main]
-      dns=none
-  when: os_centos8
-  notify:
-   - restart network
 
 - name: Make sure the include line is there in interfaces file
   lineinfile: >
