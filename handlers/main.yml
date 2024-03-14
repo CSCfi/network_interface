@@ -1,4 +1,10 @@
 ---
 - name: restart network
   service: name=network state=restarted
-  when: network_allow_service_restart
+  when: network_allow_service_restart and
+        ansible_distribution_major_version | int == 7
+
+- name: restart network
+  service: name=NetworkManager state=restarted
+  when: network_allow_service_restart and
+        ansible_distribution_major_version | int >= 8
