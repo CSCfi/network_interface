@@ -9,20 +9,20 @@
 - name: Add the OS specific varibles
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Check if we are in CentOS 8
+- name: Check if we are in RHEL8 variant
   set_fact:
-    os_centos8: "{{ ansible_facts['distribution'] == 'CentOS' and ansible_facts['distribution_major_version'] == '8' }}"
+    os_rhel8based: "{{ ansible_os_family == 'RedHat' and ansible_facts['distribution_major_version'] == '8' }}"
 
-- name: Install prerequisites for CentOS 8
+- name: Install prerequisites for RHEL8 variants
   yum:
     name: epel-release,network-scripts
     state: latest
-  when: os_centos8
+  when: os_rhel8based
 
-- name: Adjust vars in case of CentOS 8
+- name: Adjust vars in case of RHEL8 variant
   set_fact:
-    network_pkgs: "{{ network_pkgs_centos8 }}"
-  when: os_centos8
+    network_pkgs: "{{ network_pkgs_rhel8based }}"
+  when: os_rhel8based
 
 - name: Install the required  packages in Redhat derivatives
   yum:
