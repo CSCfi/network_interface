@@ -4,7 +4,7 @@ network_pkgs:
   - bridge-utils
   - iputils
 
-network_pkgs_centos8:
+network_pkgs_rhel8based:
   - python3-libselinux
   - bridge-utils
   - iputils
