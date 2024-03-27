@@ -9,20 +9,21 @@
 - name: Add the OS specific varibles
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Check if we are in RHEL8 variant
+- name: Check if we are in RHEL8 or RHEL9 variant
   set_fact:
-    os_rhel8based: "{{ ansible_os_family == 'RedHat' and ansible_facts['distribution_major_version'] == '8' }}"
+    os_rhel8_9based: "{{ ansible_os_family == 'RedHat' and ansible_facts['distribution_major_version'] >= '8' }}"
 
-- name: Install prerequisites for RHEL8 variants
+- name: Install prerequisites for RHEL8/RHEL9 variants
   yum:
-    name: epel-release,network-scripts
+    name: epel-release
     state: latest
-  when: os_rhel8based
+  when: os_rhel8_9based
 
-- name: Adjust vars in case of RHEL8 variant
+- name: Adjust vars in case of RHEL8/RHEL9 variant
   set_fact:
-    network_pkgs: "{{ network_pkgs_rhel8based }}"
-  when: os_rhel8based
+    network_pkgs: "{{ network_pkgs_rhel8_9based }}"
+    network_service: "NetworkManager"
+  when: os_rhel8_9based
 
 - name: Install the required  packages in Redhat derivatives
   yum:

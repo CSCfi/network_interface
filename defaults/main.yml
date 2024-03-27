@@ -11,3 +11,4 @@ network_extra_bonding_module_options: ""
 network_ip_route_ephemeral: false
 network_bridge_ephemeral: false
 network_vlan_ephemeral: false
+network_service: "network"

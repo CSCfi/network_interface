@@ -1,4 +1,6 @@
 ---
 - name: restart network
-  service: name=network state=restarted
+  systemd:
+    name: "{{ network_service }}"
+    state: restarted
   when: network_allow_service_restart
