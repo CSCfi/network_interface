@@ -60,6 +60,7 @@
   register: ether_result
   notify:
    - restart network
+   - toggle network
 
 - name: Write configuration files for rhel route configuration
   template: src=route_{{ ansible_os_family }}.j2 dest={{ net_path }}/route-{{ item.device }}
@@ -67,6 +68,7 @@
   when: network_ether_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+   - toggle network
 
 - name: Add ether routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
   command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
@@ -83,6 +85,7 @@
   register: bond_result
   notify:
    - restart network
+   - toggle network
 
 - name: template in bonding.conf module settings
   template: src=bonding.conf.j2 dest={{ bond_modules_path}}/bonding.conf
@@ -98,6 +101,7 @@
   when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+   - toggle network
 
 - name: Add bond routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
   command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
@@ -117,6 +121,7 @@
   register: bond_port_result
   notify:
    - restart network
+   - toggle network
 
 - name: Create the network configuration file for vlan devices
   template: src=ethernet_{{ ansible_os_family }}.j2 dest={{ net_path }}/ifcfg-{{ item.device }}
@@ -125,6 +130,7 @@
   register: vlan_result
   notify:
    - restart network
+   - toggle network
 
 - name: Add vlan interfaces manually if network_vlan_ephemeral is True
   command: "ip link add link {{ item.device.split('.')[0] }} name {{ item.device }} type vlan id {{ item.device.split('.')[1] }}"
@@ -166,6 +172,7 @@
   when: network_vlan_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+   - toggle network
 
 - name: Add vlan routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
   command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"
@@ -182,6 +189,7 @@
   register: bridge_result
   notify:
    - restart network
+   - toggle network
 
 - name: Add bridges manually if network_bridge_ephemeral is True
   command: "brctl addbr {{ item.device }}"
@@ -217,6 +225,7 @@
   when: network_bridge_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
   notify:
    - restart network
+   - toggle network
 
 - name: Add bridge routes manually to routing table if network_ip_route_ephemeral is True and if there is only one route on the interface
   command: "ip route add {{ item.route[0].network }}/{{ item.route[0].netmask }} via {{ item.route[0].gateway }} dev {{ item.device }}"

@@ -4,3 +4,7 @@
     name: "{{ network_service }}"
     state: restarted
   when: network_allow_service_restart
+
+- name: toggle network
+  shell: "nmcli networking off && nmcli networking on"
+  when: network_allow_service_restart and network_service == "NetworkManager"
