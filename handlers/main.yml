@@ -5,6 +5,6 @@
     state: restarted
   when: network_allow_service_restart
 
-- name: toggle network
-  shell: "nmcli networking off && nmcli networking on"
+- name: toggle interface
+  include_task: tasks/toggle_interface.yml
   when: network_allow_service_restart and network_service == "NetworkManager"

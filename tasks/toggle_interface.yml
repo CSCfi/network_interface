@@ -1,0 +1,12 @@
+---
+- name: Collect primary interface name
+  set_fact:
+    primary_interface_name: "{{ hostvars[inventory_hostname]['facter_networking']['primary'] }}"
+- name: Collect primary interface ip
+  set_fact:
+    primary_interface_ip: "{{ hostvars[inventory_hostname]['facter_networking']['interfaces'][primary_interface_name]['ip'] }}"
+- name: toggle any other interface with same ip
+  shell: "nmcli device disconnect {{ item['key'] }} && sleep 15 && nmcli device connect {{ item['key'] }}"
+  when: item['key'] != primary_interface_name and item['value']['ip'] is defined and item['value']['ip'] == primary_interface_ip
+  with_dict: "{{ hostvars[inventory_hostname]['facter_networking']['interfaces'] }}"
+...
