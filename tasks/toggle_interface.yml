@@ -1,4 +1,6 @@
 ---
+- name: Update facts
+  setup:
 - name: Collect primary interface name
   set_fact:
     primary_interface_name: "{{ hostvars[inventory_hostname]['facter_networking']['primary'] }}"
