@@ -6,5 +6,5 @@
   when: network_allow_service_restart
 
 - name: toggle interface
-  include_tasks: tasks/toggle_interface.yml
+  include_tasks: handlers/toggle_interface.yml
   when: network_allow_service_restart and network_service == "NetworkManager"
