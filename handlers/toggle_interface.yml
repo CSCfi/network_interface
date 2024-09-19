@@ -1,8 +1,11 @@
 ---
+- name: Wait 10 secs for the effect of network restarting
+  wait_for:
+    timeout: 10
 - name: Update facts
   setup:
 - name: toggle any interface still having same ip as its bond
-  shell: "nmcli device disconnect {{ item.1 }} && sleep 15 && nmcli device connect {{ item.1 }}"
+  shell: "nmcli device disconnect {{ item.1 }} && sleep 10 && nmcli device connect {{ item.1 }}"
   when:
     - hostvars[inventory_hostname]['ansible_' + (item.0.device | replace('-','_'))].ipv4.address is defined
     - hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address is defined
