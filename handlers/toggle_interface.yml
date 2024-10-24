@@ -11,4 +11,9 @@
     - hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address is defined
     - hostvars[inventory_hostname]['ansible_' + (item.0.device | replace('-','_'))].ipv4.address == hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address
   loop: "{{ query('subelements', network_bond_interfaces, 'bond_slaves') }}"
+
+- name: reapply any interface with ipv4 addr to get all configurations activated
+  shell: "nmcli connection up 'System {{ item }}'"
+  when: ansible_facts[item].ipv4.address is defined and not 'lo' == item
+  loop: "{{ ansible_interfaces }}"
 ...
