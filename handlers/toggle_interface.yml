@@ -24,6 +24,6 @@
 
 - name: reapply any interface with ipv4 addr to get all configurations activated
   shell: "nmcli connection up 'System {{ item }}'"
-  when: ansible_facts[item].ipv4.address is defined and not 'lo' == item
+  when: ansible_facts[item].ipv4.address is defined and not 'lo' == item and 'bond' not in item
   loop: "{{ ansible_interfaces }}"
 ...
