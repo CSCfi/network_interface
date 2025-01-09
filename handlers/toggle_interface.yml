@@ -17,6 +17,7 @@
   shell: "nmcli device disconnect {{ item.1 }} && sleep 10 && nmcli device connect {{ item.1 }}"
   when:
     - bond_toggled.results | map(attribute='skipped') | list is all
+    - item.0.bridge is defined
     - hostvars[inventory_hostname]['ansible_' + (item.0.bridge | replace('-','_'))].ipv4.address is defined
     - hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address is defined
     - hostvars[inventory_hostname]['ansible_' + (item.0.bridge | replace('-','_'))].ipv4.address == hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address
