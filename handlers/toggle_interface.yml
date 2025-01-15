@@ -16,7 +16,6 @@
 - name: toggle any interface still having same ip as its bridge
   shell: "nmcli device disconnect {{ item.1 }} && sleep 10 && nmcli device connect {{ item.1 }}"
   when:
-    - bond_toggled.results | map(attribute='skipped') | list is all
     - item.0.bridge is defined
     - hostvars[inventory_hostname]['ansible_' + (item.0.bridge | replace('-','_'))].ipv4.address is defined
     - hostvars[inventory_hostname]['ansible_' + (item.1 | replace('-','_'))].ipv4.address is defined
@@ -25,6 +24,6 @@
 
 - name: reapply any interface with ipv4 addr to get all configurations activated
   shell: "nmcli connection up 'System {{ item }}'"
-  when: ansible_facts[item].ipv4.address is defined and not 'lo' == item and 'bond' not in item
+  when: ansible_facts[item].ipv4.address is defined and not 'lo' == item and 'bond' not in item and 'virbr' not in item
   loop: "{{ ansible_interfaces }}"
 ...
